@@ -1,9 +1,13 @@
 package com.ssi.controller;
 
+import java.util.Arrays;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,13 +21,34 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	//mapping for savechange
+	@RequestMapping("/savechanges")
+	public ModelAndView saveChanges(@ModelAttribute("product")Product product)
+	{
+		productService.saveProduct(product);
+		ModelAndView mv=new ModelAndView("redirect:viewproducts");
+		return mv;
+	}
+	
+	// mapping to update a form
+	@RequestMapping("update")
+	public ModelAndView showUpdateForm(@RequestParam("pcode")int code) {
+		ModelAndView mv = new ModelAndView("pupdate");
+		Product product = productService.productDetails(code);
+		mv.addObject("product",product);
+		
+		List<String> names=Arrays.asList("Mouse","PC","Keyboard","HDD","SDD","USB Drive");
+		mv.addObject("pnames",names);
+		return mv;
+	}
+
 	// mapping for view all list
 	@RequestMapping("/viewproducts")
 	public ModelAndView showProductList() {
 		// we will fetch product from db and add them to ModelAndView Object
 		List<Product> products = productService.getAllProducts();
 		ModelAndView mv = new ModelAndView("product-list");
-		mv.addObject("products",products);
+		mv.addObject("products", products);
 		return mv;
 	}
 
@@ -32,7 +57,7 @@ public class ProductController {
 	public ModelAndView deleteProductDetails(@RequestParam("pcode") int code) {
 		Product product = productService.deleteProduct(code);
 		ModelAndView mv = new ModelAndView("delete-confirm");
-		mv.addObject("product",product);
+		mv.addObject("product", product);
 		return mv;
 
 	}
@@ -46,8 +71,17 @@ public class ProductController {
 
 	// mapping for save product details
 	@RequestMapping("/saveproduct")
-	public ModelAndView saveProductDetails(@ModelAttribute("product") Product product) {
+	public ModelAndView saveProductDetails(@Valid @ModelAttribute("product") Product product,BindingResult result) {
 		// save into databases
+		 if(result.hasErrors())
+		 {
+			 //some errors are occurred
+			// ModelAndView mv=new ModelAndView("errpage");
+			 ModelAndView mv=new ModelAndView("pentry");
+			 return mv;
+			 
+		 }
+		
 		Product pr = productService.saveProduct(product);
 		// provide response
 		ModelAndView mv = new ModelAndView("save-confirm");

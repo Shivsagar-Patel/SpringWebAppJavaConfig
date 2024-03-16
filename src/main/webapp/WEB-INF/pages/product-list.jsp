@@ -14,6 +14,7 @@
 		<td>${product.pname}</td>
 		<td>${product.price}</td>
 		<td><a href="dodelete?pcode=${product.pcode}">delete</a></td>
+		<td><a href="update?pcode=${product.pcode}">modify</a></td>
 		</tr>
 		</jstl:forEach>
 	</table>
