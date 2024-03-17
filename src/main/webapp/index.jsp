@@ -7,6 +7,7 @@
          <a href="searchinput">Search Product Details</a>
          <a href="deleteproduct">Delete-a-Product</a>
          <a href="viewproducts">View-All-Products</a>
+         <a href="mail">Send-Email</a>
 </pre>
 	<hr>
 </body>

@@ -1,5 +1,7 @@
 package com.ssi.models;
 
+import java.sql.Blob;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
@@ -22,8 +24,15 @@ public class Product {
 	@Min(value=100 , message="Minimum price allowed is:100")
 	private int price;
 	private int discount;
+	private Blob picture;
 	
 	
+	public Blob getPicture() {
+		return picture;
+	}
+	public void setPicture(Blob picture) {
+		this.picture = picture;
+	}
 	public int getPcode() {
 		
 		return pcode;
